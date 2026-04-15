@@ -1,52 +1,53 @@
-from typing import Any
+from __future__ import annotations
 
-from dataflex.filters.quality import QualityFilter
-from dataflex.filters.dedup import DeduplicationFilter
-from dataflex.filters.length import LengthFilter
+from typing import Any, Protocol, runtime_checkable
+
+
+@runtime_checkable
+class Filter(Protocol):
+    """Structural protocol that every filter must satisfy."""
+
+    def filter(self, dataset: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        ...
 
 
 class FilterPipeline:
     """
-    A composable pipeline that applies multiple filters sequentially
-    to a dataset.
+    Sequentially apply a list of filters to a dataset.
+
+    Parameters
+    ----------
+    filters : list[Filter]
+        Ordered list of filter objects to apply.
+    verbose : bool
+        If True, print the number of samples after each filter step.
     """
 
-    DEFAULT_FILTERS = [QualityFilter, DeduplicationFilter, LengthFilter]
-
-    def __init__(self, filters: list | None = None):
-        """
-        Args:
-            filters: List of instantiated filter objects. If None, uses
-                     the default filter stack with default parameters.
-        """
-        if filters is None:
-            self.filters = [cls() for cls in self.DEFAULT_FILTERS]
-        else:
-            self.filters = filters
-
-    def run(self, dataset: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """
-        Apply all filters in order and return the cleaned dataset.
-
-        Args:
-            dataset: Raw list of sample dicts.
-
-        Returns:
-            Filtered dataset.
-        """
-        current = dataset
-        for f in self.filters:
-            before = len(current)
-            current = f.filter(current)
-            after = len(current)
-            print(f"[{f.__class__.__name__}] {before} -> {after} samples")
-        return current
+    def __init__(self, filters: list[Any] | None = None, verbose: bool = False) -> None:
+        self.filters: list[Any] = filters or []
+        self.verbose = verbose
 
     def add_filter(self, f: Any) -> "FilterPipeline":
-        """Append a filter to the pipeline and return self for chaining."""
+        """Append a filter and return self for method chaining."""
         self.filters.append(f)
         return self
 
-    def __repr__(self) -> str:
+    def run(self, dataset: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Run all filters in order and return the filtered dataset."""
+        data = list(dataset)
+        if self.verbose:
+            print(f"[Pipeline] Start: {len(data)} samples")
+        for f in self.filters:
+            before = len(data)
+            data = f.filter(data)
+            if self.verbose:
+                removed = before - len(data)
+                print(
+                    f"[Pipeline] {f.__class__.__name__}: "
+                    f"{len(data)} remaining ({removed} removed)"
+                )
+        return data
+
+    def __repr__(self) -> str:  # pragma: no cover
         names = ", ".join(f.__class__.__name__ for f in self.filters)
-        return f"FilterPipeline([{names}])"
+        return f"FilterPipeline(filters=[{names}], verbose={self.verbose})"
