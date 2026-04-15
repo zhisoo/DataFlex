@@ -6,6 +6,7 @@ from dataflex.filters.toxicity import ToxicityFilter
 from dataflex.filters.keyword import KeywordFilter
 from dataflex.filters.punctuation import PunctuationFilter
 from dataflex.filters.repetition import RepetitionFilter
+from dataflex.filters.stopwords import StopwordsFilter
 
 __all__ = [
     "QualityFilter",
@@ -16,4 +17,5 @@ __all__ = [
     "KeywordFilter",
     "PunctuationFilter",
     "RepetitionFilter",
+    "StopwordsFilter",
 ]
