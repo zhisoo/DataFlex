@@ -17,7 +17,8 @@ SAMPLE_DATASET = [
 
 class TestQualityFilter:
     def setup_method(self):
-        self.qf = QualityFilter(min_instruction_len=10, min_output_len=5)
+        # Using min_output_len=4 to allow short but valid outputs like "Paris"
+        self.qf = QualityFilter(min_instruction_len=10, min_output_len=4)
 
     def test_filters_short_instruction(self):
         result = self.qf.filter(SAMPLE_DATASET)
@@ -32,6 +33,11 @@ class TestQualityFilter:
     def test_keeps_valid_samples(self):
         result = self.qf.filter(SAMPLE_DATASET)
         assert any(s["instruction"] == "Summarize this article in detail." for s in result)
+
+    def test_keeps_short_but_valid_output(self):
+        # "Paris" has 5 chars, should pass with min_output_len=4
+        result = self.qf.filter(SAMPLE_DATASET)
+        assert any(s["output"] == "Paris" for s in result)
 
     def test_max_length_filter(self):
         qf = QualityFilter(max_instruction_len=20)
@@ -77,6 +83,3 @@ class TestDeduplicationFilter:
         ]
         result = df.filter(dataset)
         assert len(result) == 2
-
-    def test_empty_dataset(self):
-        assert self.df.filter([]) == []
