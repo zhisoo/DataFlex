@@ -7,6 +7,8 @@ DEFAULT_STOPWORDS: Set[str] = {
     "for", "of", "with", "by", "from", "is", "it", "this", "that",
     "was", "are", "be", "has", "had", "have", "will", "would", "could",
     "should", "may", "might", "do", "does", "did", "not", "no", "so",
+    # extra common fillers I kept seeing slip through in my datasets
+    "just", "very", "also", "then", "than", "when", "where", "which",
 }
 
 
