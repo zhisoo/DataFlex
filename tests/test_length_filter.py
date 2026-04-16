@@ -74,3 +74,15 @@ class TestLengthFilter:
         sample = {**SAMPLE_VALID, "output": "   "}
         result = self.filter.filter([sample])
         assert len(result) == 0
+
+    # Personal note: tab-only and newline-only outputs should also be filtered.
+    # Found this edge case while testing with some scraped data.
+    def test_removes_tab_only_output(self):
+        sample = {**SAMPLE_VALID, "output": "\t\t\t"}
+        result = self.filter.filter([sample])
+        assert len(result) == 0
+
+    def test_removes_newline_only_output(self):
+        sample = {**SAMPLE_VALID, "output": "\n\n"}
+        result = self.filter.filter([sample])
+        assert len(result) == 0
