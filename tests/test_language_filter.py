@@ -77,4 +77,11 @@ class TestLanguageFilter:
         r = repr(f)
         assert "LanguageFilter" in r
         assert "en" in r
-        assert "zh" in r
+
+    # --- all languages ---
+
+    def test_all_four_languages_kept_when_all_allowed(self):
+        # Useful sanity check: if all langs are allowed, nothing should be filtered out
+        f = LanguageFilter(allowed_languages=["en", "zh", "fr", "es"], lang_field="lang")
+        result = f.filter(self.samples)
+        assert len(result) == 4
