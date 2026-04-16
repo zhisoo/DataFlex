@@ -15,7 +15,7 @@ class LanguageFilter:
         allowed_languages: List[str],
         field: str = "instruction",
         lang_field: Optional[str] = None,
-        min_confidence: float = 0.8,
+        min_confidence: float = 0.7,
     ):
         """
         Args:
@@ -23,6 +23,8 @@ class LanguageFilter:
             field: The text field to use for language detection.
             lang_field: If set, read language from this field instead of detecting it.
             min_confidence: Minimum confidence threshold for langdetect (0.0 - 1.0).
+                Lowered default to 0.7 since 0.8 was too aggressive and dropped
+                valid short samples.
         """
         if not allowed_languages:
             raise ValueError("allowed_languages must not be empty")
