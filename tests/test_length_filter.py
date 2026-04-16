@@ -67,3 +67,10 @@ class TestLengthFilter:
         r = repr(self.filter)
         assert "LengthFilter" in r
         assert "min_instruction_len" in r
+
+    # Personal note: added this test to verify that an output consisting only
+    # of whitespace is treated as effectively empty and filtered out.
+    def test_removes_whitespace_only_output(self):
+        sample = {**SAMPLE_VALID, "output": "   "}
+        result = self.filter.filter([sample])
+        assert len(result) == 0
