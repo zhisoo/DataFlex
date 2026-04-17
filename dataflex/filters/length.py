@@ -14,12 +14,14 @@ class LengthFilter:
         min_output_len: int = 1,
         max_output_len: int = 2048,
         max_input_len: int = 1024,
+        min_input_len: int = 0,
     ):
         self.min_instruction_len = min_instruction_len
         self.max_instruction_len = max_instruction_len
         self.min_output_len = min_output_len
         self.max_output_len = max_output_len
         self.max_input_len = max_input_len
+        self.min_input_len = min_input_len
 
     def _check_field(self, text: str, min_len: int, max_len: int) -> bool:
         length = len(text.strip())
@@ -49,7 +51,8 @@ class LengthFilter:
                 output, self.min_output_len, self.max_output_len
             ):
                 continue
-            if inp and len(inp.strip()) > self.max_input_len:
+            # Check input length bounds (min_input_len allows filtering out empty inputs)
+            if not self._check_field(inp, self.min_input_len, self.max_input_len):
                 continue
 
             filtered.append(sample)
@@ -62,5 +65,6 @@ class LengthFilter:
             f"max_instruction_len={self.max_instruction_len}, "
             f"min_output_len={self.min_output_len}, "
             f"max_output_len={self.max_output_len}, "
+            f"min_input_len={self.min_input_len}, "
             f"max_input_len={self.max_input_len})"
         )
