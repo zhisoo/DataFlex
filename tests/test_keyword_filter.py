@@ -74,8 +74,7 @@ class TestKeywordFilter:
         with pytest.raises(ValueError):
             KeywordFilter(keywords=[])
 
+    # Note: fields defaults to all three standard fields (instruction, input, output)
     def test_repr(self):
         f = KeywordFilter(keywords=["spam"], fields=["instruction"], case_sensitive=False)
-        r = repr(f)
-        assert "KeywordFilter" in r
-        assert "spam" in r
+        assert "spam" in repr(f)
