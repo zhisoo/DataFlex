@@ -22,7 +22,8 @@ class RepetitionFilter:
     def __init__(
         self,
         fields: list[str] | None = None,
-        max_word_repetition_ratio: float = 0.3,
+        # Lowered from 0.3 — catches repetitive filler words more reliably
+        max_word_repetition_ratio: float = 0.25,
         max_ngram_repetition_ratio: float = 0.4,
         # Bumped default from 3 to 4 — trigrams felt too aggressive on short texts
         ngram_size: int = 4,
