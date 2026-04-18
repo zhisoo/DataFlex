@@ -8,6 +8,9 @@ from dataflex.filters.punctuation import PunctuationFilter
 from dataflex.filters.repetition import RepetitionFilter
 from dataflex.filters.stopwords import StopwordsFilter
 
+# Filters I commonly use: QualityFilter, DeduplicationFilter, LengthFilter
+# TODO: look into adding a custom domain-specific filter later
+
 __all__ = [
     "QualityFilter",
     "DeduplicationFilter",
