@@ -3,7 +3,8 @@ from typing import List, Optional
 
 DEFAULT_TOXIC_KEYWORDS: List[str] = [
     "hate", "kill", "murder", "abuse", "violence",
-    "racist", "sexist", "offensive", "slur", "harassment"
+    "racist", "sexist", "offensive", "slur", "harassment",
+    "threat", "toxic", "explicit"
 ]
 
 
