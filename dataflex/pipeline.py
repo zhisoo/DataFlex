@@ -23,7 +23,7 @@ class FilterPipeline:
         If True, print the number of samples after each filter step.
     """
 
-    def __init__(self, filters: list[Any] | None = None, verbose: bool = False) -> None:
+    def __init__(self, filters: list[Any] | None = None, verbose: bool = True) -> None:
         self.filters: list[Any] = filters or []
         self.verbose = verbose
 
@@ -46,6 +46,8 @@ class FilterPipeline:
                     f"[Pipeline] {f.__class__.__name__}: "
                     f"{len(data)} remaining ({removed} removed)"
                 )
+        if self.verbose:
+            print(f"[Pipeline] Done: {len(data)} samples total")
         return data
 
     def __repr__(self) -> str:  # pragma: no cover
