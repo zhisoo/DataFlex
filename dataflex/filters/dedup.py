@@ -6,7 +6,12 @@ from typing import Any
 
 
 class DeduplicationFilter:
-    """Remove exact or near-duplicate samples based on instruction hashing."""
+    """Remove exact or near-duplicate samples based on instruction hashing.
+
+    Uses MD5 hashing on the combined instruction and input fields to detect
+    duplicates. Case-insensitive by default so that "Tell me X" and "tell me x"
+    are treated as the same sample.
+    """
 
     def __init__(
         self,
@@ -21,7 +26,9 @@ class DeduplicationFilter:
     def _make_key(self, sample: dict[str, Any]) -> str:
         instruction = sample.get(self.instruction_key, "")
         inp = sample.get(self.input_key, "")
-        combined = f"{instruction}|||{inp}"
+        # Strip surrounding whitespace before comparing to catch near-identical
+        # samples that differ only in leading/trailing spaces.
+        combined = f"{instruction.strip()}|||{inp.strip()}"
         if not self.case_sensitive:
             combined = combined.lower()
         return hashlib.md5(combined.encode("utf-8")).hexdigest()
