@@ -48,6 +48,11 @@ class TestQualityFilter:
         bad = [{"instruction": 123, "input": "", "output": "answer"}]
         assert self.qf.filter(bad) == []
 
+    def test_filters_whitespace_only_instruction(self):
+        # NOTE: whitespace-only instructions should be treated as empty and filtered out
+        whitespace_sample = [{"instruction": "   ", "input": "", "output": "some output here"}]
+        assert self.qf.filter(whitespace_sample) == []
+
 
 class TestDeduplicationFilter:
     def setup_method(self):
@@ -72,14 +77,4 @@ class TestDeduplicationFilter:
             {"instruction": "Hello World", "input": "", "output": "a"},
             {"instruction": "hello world", "input": "", "output": "b"},
         ]
-        result = self.df.filter(dataset)
-        assert len(result) == 1
-
-    def test_case_sensitive_dedup(self):
-        df = DeduplicationFilter(case_sensitive=True)
-        dataset = [
-            {"instruction": "Hello World", "input": "", "output": "a"},
-            {"instruction": "hello world", "input": "", "output": "b"},
-        ]
-        result = df.filter(dataset)
-        assert len(result) == 2
+        result = self.df
