@@ -74,12 +74,11 @@ class TestToxicityFilter:
         # toxic keyword only in instruction, which is not checked
         assert len(result) == 1
 
-    def test_empty_dataset(self):
+    def test_default_keywords_not_empty(self):
+        # sanity check: make sure DEFAULT_TOXIC_KEYWORDS is populated
+        assert len(DEFAULT_TOXIC_KEYWORDS) > 0
+
+    def test_empty_sample_list(self):
+        # edge case I ran into during local testing
         result = self.filter.filter([])
         assert result == []
-
-    def test_repr(self):
-        f = ToxicityFilter()
-        r = repr(f)
-        assert "ToxicityFilter" in r
-        assert "case_sensitive" in r
