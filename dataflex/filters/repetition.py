@@ -16,7 +16,7 @@ class RepetitionFilter:
     max_ngram_repetition_ratio : float
         Maximum allowed ratio of repeated n-grams to total n-grams.
     ngram_size : int
-        Size of n-grams used for repetition detection (default: 3).
+        Size of n-grams used for repetition detection (default: 4).
     """
 
     def __init__(
@@ -24,7 +24,8 @@ class RepetitionFilter:
         fields: list[str] | None = None,
         max_word_repetition_ratio: float = 0.3,
         max_ngram_repetition_ratio: float = 0.4,
-        ngram_size: int = 3,
+        # Bumped default from 3 to 4 — trigrams felt too aggressive on short texts
+        ngram_size: int = 4,
     ) -> None:
         self.fields = fields or ["instruction", "input", "output"]
         self.max_word_repetition_ratio = max_word_repetition_ratio
