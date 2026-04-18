@@ -15,7 +15,7 @@ class PunctuationFilter:
     def __init__(
         self,
         min_ratio: float = 0.0,
-        max_ratio: float = 0.2,  # lowered from 0.3 - 30% felt too permissive
+        max_ratio: float = 0.15,  # lowered from 0.2 - seems more appropriate for clean data
         fields: Optional[List[str]] = None,
     ):
         """
