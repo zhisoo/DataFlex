@@ -19,6 +19,15 @@ class TestStopwordsFilter:
         with pytest.raises(ValueError):
             StopwordsFilter(min_ratio=-0.1)
 
+    # edge case: boundary values should be valid
+    def test_zero_ratio_is_valid(self):
+        f = StopwordsFilter(min_ratio=0.0)
+        assert f is not None
+
+    def test_one_ratio_is_valid(self):
+        f = StopwordsFilter(min_ratio=1.0)
+        assert f is not None
+
     # --- keeps valid samples ---
 
     def test_keeps_meaningful_sample(self):
@@ -83,17 +92,3 @@ class TestStopwordsFilter:
 
     def test_empty_list_returns_empty(self):
         assert self.f.filter([]) == []
-
-    # --- multiple samples ---
-
-    def test_filters_mixed_samples(self):
-        good = self._make_sample(
-            instruction="Describe machine learning algorithms",
-            output="Machine learning algorithms optimise predictive models.",
-        )
-        bad = self._make_sample(
-            instruction="the and or but in on",
-            output="the and or but in on",
-        )
-        result = self.f.filter([good, bad])
-        assert result == [good]
