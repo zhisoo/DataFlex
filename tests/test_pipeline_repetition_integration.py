@@ -8,13 +8,14 @@ from dataflex.filters.length import LengthFilter
 
 class TestPipelineRepetitionIntegration:
     def setup_method(self):
+        # Tightened repetition thresholds for stricter filtering in my use case
         self.pipeline = FilterPipeline(
             filters=[
                 QualityFilter(),
                 LengthFilter(min_instruction_length=5),
                 RepetitionFilter(
-                    max_word_repetition_ratio=0.3,
-                    max_ngram_repetition_ratio=0.4,
+                    max_word_repetition_ratio=0.25,
+                    max_ngram_repetition_ratio=0.35,
                 ),
             ]
         )
