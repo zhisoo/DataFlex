@@ -83,6 +83,13 @@ class TestLengthFilter:
         assert len(result) == 0
 
     def test_removes_newline_only_output(self):
-        sample = {**SAMPLE_VALID, "output": "\n\n"}
+        sample = {**SAMPLE_VALID, "output": "\n\n\n"}
+        result = self.filter.filter([sample])
+        assert len(result) == 0
+
+    # Personal note: mixed whitespace (spaces, tabs, newlines) should also be
+    # treated as empty output and filtered out.
+    def test_removes_mixed_whitespace_output(self):
+        sample = {**SAMPLE_VALID, "output": " \t \n "}
         result = self.filter.filter([sample])
         assert len(result) == 0
