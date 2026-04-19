@@ -17,6 +17,9 @@ class RepetitionFilter:
         Maximum allowed ratio of repeated n-grams to total n-grams.
     ngram_size : int
         Size of n-grams used for repetition detection (default: 4).
+    min_words : int
+        Minimum number of words required before repetition checks are applied.
+        Texts shorter than this are skipped entirely (default: 5).
     """
 
     def __init__(
@@ -27,11 +30,14 @@ class RepetitionFilter:
         max_ngram_repetition_ratio: float = 0.4,
         # Bumped default from 3 to 4 — trigrams felt too aggressive on short texts
         ngram_size: int = 4,
+        # Skip repetition checks on very short texts — they almost always false-positive
+        min_words: int = 5,
     ) -> None:
         self.fields = fields or ["instruction", "input", "output"]
         self.max_word_repetition_ratio = max_word_repetition_ratio
         self.max_ngram_repetition_ratio = max_ngram_repetition_ratio
         self.ngram_size = ngram_size
+        self.min_words = min_words
 
     def _word_repetition_ratio(self, text: str) -> float:
         words = text.lower().split()
@@ -52,6 +58,9 @@ class RepetitionFilter:
         return 1.0 - len(unique) / len(ngrams)
 
     def _is_repetitive(self, text: str) -> bool:
+        # Don't penalise short texts — a single repeated word skews ratios badly
+        if len(text.lower().split()) < self.min_words:
+            return False
         if self._word_repetition_ratio(text) > self.max_word_repetition_ratio:
             return True
         if self._ngram_repetition_ratio(text) > self.max_ngram_repetition_ratio:
@@ -75,5 +84,6 @@ class RepetitionFilter:
             f"RepetitionFilter(fields={self.fields}, "
             f"max_word_repetition_ratio={self.max_word_repetition_ratio}, "
             f"max_ngram_repetition_ratio={self.max_ngram_repetition_ratio}, "
-            f"ngram_size={self.ngram_size})"
+            f"ngram_size={self.ngram_size}, "
+            f"min_words={self.min_words})"
         )
