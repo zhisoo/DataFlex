@@ -9,6 +9,8 @@ DEFAULT_STOPWORDS: Set[str] = {
     "should", "may", "might", "do", "does", "did", "not", "no", "so",
     # extra common fillers I kept seeing slip through in my datasets
     "just", "very", "also", "then", "than", "when", "where", "which",
+    # added: these kept showing up as noise in my instruction-tuning data
+    "please", "sure", "okay", "yes", "yeah", "like", "well",
 }
 
 
