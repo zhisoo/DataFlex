@@ -87,9 +87,10 @@ class TestLengthFilter:
         result = self.filter.filter([sample])
         assert len(result) == 0
 
-    # Personal note: mixed whitespace (spaces, tabs, newlines) should also be
-    # treated as empty output and filtered out.
+    # Personal note: also want to make sure mixed whitespace (spaces + newlines)
+    # gets caught too -- saw this in a few real samples from the dataset I was
+    # experimenting with.
     def test_removes_mixed_whitespace_output(self):
-        sample = {**SAMPLE_VALID, "output": " \t \n "}
+        sample = {**SAMPLE_VALID, "output": "  \n  \t  "}
         result = self.filter.filter([sample])
         assert len(result) == 0
